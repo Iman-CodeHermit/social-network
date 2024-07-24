@@ -25,7 +25,7 @@ class UserAdmin(BaseUserAdmin):
 
     readonly_fields = ('last_login',)
     search_fields = ('username',)
-    ordering = ('last_login')
+    ordering = ('last_login',)
     filter_horizontal = ()
 
 admin.site.unregister(Group)
