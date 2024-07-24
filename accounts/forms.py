@@ -11,7 +11,6 @@ class UserCreationForm(forms.ModelForm):
         model = User
         fields = ('email', 'phone_number', 'username')
 
-
     def clean_password2(self):
         cd = self.cleaned_data
         if cd['password1'] and cd['password2'] and cd['password1'] != cd['password2']:
@@ -24,3 +23,10 @@ class UserCreationForm(forms.ModelForm):
         if commit:
             user.save()
         return user    
+
+
+class UserChangeForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('email', 'phone_number', 'password', 'last_login')
+        password = ReadOnlyPasswordHashField(help_text='You Can Change Password Using<a href=\"../password/\">This Form</a>')
