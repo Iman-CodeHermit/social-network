@@ -53,5 +53,5 @@ class UserRegistrationForm(forms.Form):
         return phone_number
 
 
-class VerifyCodeForm(forms.ModelForm):
-    code = forms.ImageField()
+class VerifyCodeForm(forms.Form):
+    code = forms.IntegerField()
