@@ -1,3 +1,3 @@
 from django.test import TestCase
 
-# Create your tests here..\.venv\Scripts\activate.ps1
+# Create your tests here.
