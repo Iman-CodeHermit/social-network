@@ -32,3 +32,6 @@ class UserRegistrationView(View):
             return redirect('accounts:verify_code')
         return redirect('home:home')
 
+
+
+

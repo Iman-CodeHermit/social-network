@@ -51,3 +51,7 @@ class UserRegistrationForm(forms.Form):
         if user:
             raise ValidationError('this phone number already exists.')
         return phone_number
+
+
+class VerifyCodeForm(forms.ModelForm):
+    code = forms.ImageField()
