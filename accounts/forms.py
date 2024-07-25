@@ -30,3 +30,24 @@ class UserChangeForm(forms.ModelForm):
         model = User
         fields = ('email', 'phone_number', 'password', 'last_login')
         password = ReadOnlyPasswordHashField(help_text='You Can Change Password Using<a href=\"../password/\">This Form</a>')
+
+
+class UserRegistrationForm(forms.Form):
+    phone_number = forms.CharField(required=True, max_length= 11, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    username = forms.CharField(max_length=50, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        user = User.objects.filter(email=email).exists()
+        if user:
+            raise ValidationError('this email already exists.')
+        return email
+
+    def clean_phone(self):
+        phone_number = self.cleaned_data['phone_number']
+        user = User.objects.filter(phone_number = phone_number).exists()
+        if user:
+            raise ValidationError('this phone number already exists.')
+        return phone_number
