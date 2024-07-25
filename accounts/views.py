@@ -2,7 +2,8 @@ import random
 from utils import send_otp_code
 from django.shortcuts import render, redirect
 from django.views import View
-from .forms import UserRegistrationForm, VerifyCodeForm
+from .forms import UserRegistrationForm, VerifyCodeForm, UserLoginForm
+from django.contrib.auth import login, logout, aauthenticate
 from django.contrib import messages
 from .models import OtpCode, User
 
@@ -72,3 +73,39 @@ class UserRegisterVerifyView(View):
                 messages.error(request, 'Code is Wrong', 'danger')
                 return redirect('accounts:verify_code')
         return redirect('home:home')
+
+
+class UserLoginView(View):
+    form_class = UserLoginForm
+    template_name = 'accounts/login.html'
+
+    def setup(self, request, *args, **kwargs):
+        self.next = request.GET.get('next', None)
+        return super().setup(request, *args, **kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+
+
+    def get(self, request):
+        form = self.form_class
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            user = aauthenticate(request, phone_number=cd['phone_number'], password=cd['password'])
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'you logged in Successfully', 'success')
+                if self.next:
+                    return redirect(self.next)
+                return redirect(home:home)
+            messages.error(request, 'your password or username is wrong', 'warning')
+            return render(request, self.template_name, {'form': form})
+                
+
+
+
+
+
