@@ -35,3 +35,5 @@ admin.site.register(User, UserAdmin)
 @admin.register(OtpCode)
 class OtpCodeAdmin(admin.ModelAdmin):
     list_display = ('phone_number', 'code', 'created')
+
+

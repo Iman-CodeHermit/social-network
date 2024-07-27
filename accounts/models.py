@@ -39,3 +39,5 @@ class OtpCode(models.Model):
 
     def __str__(self):
         return f'{self.phone_number}-{self.code}-{self.created}'
+
+

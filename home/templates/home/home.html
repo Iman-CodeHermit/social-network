@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
 {% block content%}
-<h1> Hi iman </h1>
+<h1> HI! </h1>
+{% for post in posts %}
+    <a href="{% url 'post:post_detail' post.id post.slug %}" class="card-body">{{ post.body | truncatewords:60 }}</a>
+{% endfor %}
 {% endblock %}
