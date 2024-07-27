@@ -1,4 +1,9 @@
 {% extends 'Base.html' %}
 {% block content %}
 <h1 class="text-center">{{ user.username | upper  }}</h1>
+<div class="card">
+    {% for post in posts %}
+        <a href="{% url 'post:post_detail' post.id post.slug %}" class="card-body">{{ post.body | truncatewords:60 }}</a>
+    {% endfor %}
+</div>
 {% endblock %}
