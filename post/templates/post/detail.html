@@ -3,14 +3,18 @@
 
 
 {% if request.user.id == post.user.id %}
-    <a href="{% url 'post:post_delete' post.id %}" class="btn btn-danger">DELETE</a>
-    <a href="{% url 'post:post_update' post.id %}" class="btn btn-info">UPDATE</a><br/>
+    <a href="{% url 'post:post_delete' post.id %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'post:post_update' post.id %}" class="btn btn-info">Update</a><br/>
 {% endif%}
+
+
 <h5 class="text-center">--------------------------------------------</h5>
-    
+
+
+<div class="card">
     <p><a href="{% url 'accounts:user_profile' post.user.id %}"> {{ post.user.username }} </a> - {{ post.updated | date:"j-M-Y"}}-{{ post.created | timesince }}</p>
     <p>{{post.body}}</p>
-
+</div>
 
 
 {% endblock %}
