@@ -9,6 +9,7 @@ from django.contrib import messages
 from .models import OtpCode, User
 from post.models import Post
 
+
 # Create your views here.
 
 class UserRegistrationView(View):
@@ -30,6 +31,7 @@ class UserRegistrationView(View):
         if form.is_valid():
             random_code = random.randint(1000, 9999)
             OtpCode.objects.create(phone_number=form.cleaned_data['phone_number'], code=random_code)
+            print(random_code)
             request.session['user_registration_info'] = {
                 'phone_number': form.cleaned_data['phone_number'],
                 'email': form.cleaned_data['email'],
@@ -120,5 +122,5 @@ class UserProfileView(LoginRequiredMixin, View):
     template_name = 'accounts/profile.html'
     def get(self, request, user_id):
         user = User.objects.get(id=user_id)
-        posts = Post.objects.filter(user=user )
+        posts = Post.objects.filter(user=user)
         return render(request, self.template_name, {'user': user, 'posts': posts})
