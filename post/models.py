@@ -15,6 +15,8 @@ class Post(models.Model):
     def __str__(self):
         return f'{self.slug}'
 
+    def Likes_count(self):
+        return self.pvote.count()
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ucomment')
@@ -27,4 +29,12 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.user}-{self.body[:30]}'
+
+
+class Vote(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='uvote')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='pvote')
+
+    def __str__(self):
+        return f'{self.user} liked {self.post.slug}'
 

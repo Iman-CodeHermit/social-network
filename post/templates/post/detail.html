@@ -10,7 +10,9 @@
     <p>{{ post.body }}</p><hr/>
 
     {% if request.user.is_authenticated %}
-        <form action="" method="post">
+        <a href="{% url 'post:post_like' post.id %}" class="{% if can_like %}disabled{% endif %} btn btn-primary col-md-2">Like {{ post.Likes_count }}</a><br/>
+
+        <form action="" method="post"><br/>
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Send">
