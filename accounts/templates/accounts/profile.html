@@ -8,6 +8,9 @@
     <a class="btn btn-primary" href="{% url 'accounts:user_unfollow' user.id %}">Unfollow</a>
 {% endif %}
 
+<div class="card">
+    <h4>{{ user.bio }}</h4>
+</div>
 
 <div class="card">
     {% for post in posts %}
