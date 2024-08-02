@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Comment
+from .models import Post, Comment, Vote
 # Register your models here.
 
 class PostAdmin(admin.ModelAdmin):
@@ -17,3 +17,4 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ('user', 'post', 'body', 'is_reply')
     raw_id_fields = ('post', 'reply')
 
+admin.site.register(Vote)

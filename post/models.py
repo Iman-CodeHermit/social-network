@@ -18,6 +18,7 @@ class Post(models.Model):
     def Likes_count(self):
         return self.pvote.count()
 
+
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ucomment')
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='pcomment')

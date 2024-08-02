@@ -6,7 +6,7 @@ from .forms import UserRegistrationForm, VerifyCodeForm, UserLoginForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from .models import OtpCode, User
+from .models import OtpCode, User, Relation
 from post.models import Post
 
 
@@ -120,7 +120,37 @@ class UserLogoutView(LoginRequiredMixin, View):
 
 class UserProfileView(LoginRequiredMixin, View):
     template_name = 'accounts/profile.html'
+
+
     def get(self, request, user_id):
+        is_following = False
         user = User.objects.get(id=user_id)
         posts = Post.objects.filter(user=user)
-        return render(request, self.template_name, {'user': user, 'posts': posts})
+        relation = Relation.objects.filter(from_user=request.user, to_user=user)
+        if relation.exists():
+            is_following = True
+        return render(request, self.template_name, {'user': user, 'posts': posts, 'is_following': is_following})
+
+
+class UserFollowView(LoginRequiredMixin, View):
+    def get(self, request, user_id):
+        user = User.objects.get(id=user_id)
+        relation = Relation.objects.filter(from_user=request.user, to_user=user)
+        if relation.exists():
+            messages.error(request, 'you are already following this user!', 'danger')
+        else:
+            Relation.objects.create(from_user=request.user, to_user=user)
+            messages.success(request, 'you followed this user.', 'success')
+        return redirect('accounts:user_profile', user_id)
+
+
+class UserUnfollowView(LoginRequiredMixin, View):
+    def get(self, request, user_id):
+        user = User.objects.get(id=user_id)
+        relation = Relation.objects.filter(from_user=request.user, to_user=user)
+        if relation.exists():
+            relation.delete()
+            messages.success(request, 'you unfollowed this user!', 'success')
+        else:
+            messages.error(request, 'you are not followed this user!', 'danger')
+        return redirect('accounts:user_profile', user_id)

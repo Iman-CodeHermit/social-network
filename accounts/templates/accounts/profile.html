@@ -1,6 +1,14 @@
 {% extends 'Base.html' %}
 {% block content %}
 <h1 class="text-center">{{ user.username | upper  }}</h1>
+
+{% if request.user.id != user.id and not is_following %}
+    <a class="btn btn-primary" href="{% url 'accounts:user_follow' user.id %}">Follow</a>
+{% elif request.user.id != user.id and is_following %}
+    <a class="btn btn-primary" href="{% url 'accounts:user_unfollow' user.id %}">Unfollow</a>
+{% endif %}
+
+
 <div class="card">
     {% for post in posts %}
         <a href="{% url 'post:post_detail' post.id post.slug %}" class="card-body">{{ post.body | truncatewords:60 }}</a>
