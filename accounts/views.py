@@ -2,7 +2,7 @@ import random
 from utils import send_otp_code
 from django.shortcuts import render, redirect
 from django.views import View
-from .forms import UserRegistrationForm, VerifyCodeForm, UserLoginForm
+from .forms import UserRegistrationForm, VerifyCodeForm, UserLoginForm, EditUserForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -154,3 +154,19 @@ class UserUnfollowView(LoginRequiredMixin, View):
         else:
             messages.error(request, 'you are not followed this user!', 'danger')
         return redirect('accounts:user_profile', user_id)
+
+
+class EditUserView(LoginRequiredMixin, View):
+    form_class = EditUserForm
+    
+    def get(self, request):
+        form = self.form_class(instance=request.user)
+        return render(request, 'accounts/edit_profile.html', {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'your profile updated successfully', 'success')
+        return redirect('accounts:user_profile', request.user.id)
+        

@@ -2,19 +2,32 @@
 {% block content %}
 <h1 class="text-center">{{ user.username | upper  }}</h1>
 
+<br/>
+
+{% if request.user.id == user.id %}
+    <a href="{% url 'accounts:edit_user' %}" class="btn btn-info">Edit Profile</a>
+{%endif%}
+
+<br/>
+
 {% if request.user.id != user.id and not is_following %}
     <a class="btn btn-primary" href="{% url 'accounts:user_follow' user.id %}">Follow</a>
 {% elif request.user.id != user.id and is_following %}
     <a class="btn btn-primary" href="{% url 'accounts:user_unfollow' user.id %}">Unfollow</a>
 {% endif %}
 
+<br/>
+
 <div class="card">
     <h4>{{ user.bio }}</h4>
 </div>
+
+<br/>
 
 <div class="card">
     {% for post in posts %}
         <a href="{% url 'post:post_detail' post.id post.slug %}" class="card-body">{{ post.body | truncatewords:60 }}</a>
     {% endfor %}
 </div>
+
 {% endblock %}

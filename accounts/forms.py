@@ -62,4 +62,12 @@ class UserLoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
 
-
+class EditUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('email', 'birthday', 'bio')
+        widget = {
+            'birthday': forms.DateInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'bio': forms.TextInput(attrs={'class': 'form-control'})
+        }
