@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 {% block content%}
-<h1> HI! </h1>
+
+<h1 class="text-center">SOCIAL NETWORK</h1>
+
+<form action="" method="get">
+    {{ form.as_p }} 
+    <input type="submit" value="Search">
+</form>
+<br/>
 <div class="card">
     {% for post in posts %}
         <a href="{% url 'post:post_detail' post.id post.slug %}" class="card-body">{{ post.body | truncatewords:60 }}</a>
