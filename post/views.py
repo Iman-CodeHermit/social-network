@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from post.models import Post, Comment, Vote
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -16,11 +16,11 @@ class PostDetailView(View):
     form_reply_class = CommentReplyForm
     
     def setup(self, request, *args, **kwargs):
-        self.post_instance = Post.objects.get(id=kwargs['post_id'], slug=kwargs['post_slug'])
+        self.post_instance = get_object_or_404(Post, id=kwargs['post_id'], slug=kwargs['post_slug'])
         return super().setup(request, *args, **kwargs)
 
     def get(self, request, post_id, post_slug):
-        post = Post.objects.get(id = post_id, slug = post_slug)
+        post = get_object_or_404(Post, id = post_id, slug = post_slug)
         comments = post.pcomment.filter(is_reply=False)
         form = self.form_class
         return render(request, self.template_name, 
@@ -41,7 +41,7 @@ class PostDetailView(View):
 
 class PostDeleteView(LoginRequiredMixin, View):
     def get(self, request, post_id):
-        post = Post.objects.get(id=post_id)
+        post = get_object_or_404(Post, id=post_id)
         if post.user.id == request.user.id:
             post.delete()
             messages.success(request, 'post delete successfully!', 'success')
