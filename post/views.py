@@ -56,7 +56,7 @@ class PostUpdateView(LoginRequiredMixin, View):
 
 
     def setup(self, request, *args, **kwargs):
-        self.post_instance = Post.objects.get(id=kwargs['post_id'])
+        self.post_instance = get_object_or_404(Post, id=kwargs['post_id'])
         return super().setup(request, *args, **kwargs)
     
 
@@ -110,7 +110,7 @@ class PostAddReplyView(LoginRequiredMixin, View):
 
     def post(self, request, post_id, comment_id):
         post = Post.objects.get(id=post_id)
-        comment = Comment.objects.get(id=comment_id)
+        comment = get_object_or_404(Comment, id=comment_id)
         form = self.form_class(request.POST)
         if form.is_valid():
             reply = form.save(commit=False)
@@ -125,7 +125,7 @@ class PostAddReplyView(LoginRequiredMixin, View):
 
 class PostLikeView(LoginRequiredMixin, View):
     def get(self, request, post_id):
-        post = Post.objects.get(id=post_id)
+        post = get_object_or_404(Post, id=post_id)
         like = Vote.objects.filter(post=post, user=request.user)
         if like.exists():
             messages.error(request, 'you have already liked this post!')

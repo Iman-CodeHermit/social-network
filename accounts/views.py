@@ -1,6 +1,6 @@
 import random
 from utils import send_otp_code
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import UserRegistrationForm, VerifyCodeForm, UserLoginForm, EditUserForm
 from django.contrib.auth import login, logout, authenticate
@@ -127,7 +127,7 @@ class UserProfileView(LoginRequiredMixin, View):
 
     def get(self, request, user_id):
         is_following = False
-        user = User.objects.get(id=user_id)
+        user = get_object_or_404(User, id=user_id)
         posts = Post.objects.filter(user=user)
         relation = Relation.objects.filter(from_user=request.user, to_user=user)
         if relation.exists():
@@ -137,7 +137,7 @@ class UserProfileView(LoginRequiredMixin, View):
 
 class UserFollowView(LoginRequiredMixin, View):
     def get(self, request, user_id):
-        user = User.objects.get(id=user_id)
+        user = get_object_or_404(User, id=user_id)
         relation = Relation.objects.filter(from_user=request.user, to_user=user)
         if relation.exists():
             messages.error(request, 'you are already following this user!', 'danger')
@@ -149,7 +149,7 @@ class UserFollowView(LoginRequiredMixin, View):
 
 class UserUnfollowView(LoginRequiredMixin, View):
     def get(self, request, user_id):
-        user = User.objects.get(id=user_id)
+        user = get_object_or_404(User, id=user_id)
         relation = Relation.objects.filter(from_user=request.user, to_user=user)
         if relation.exists():
             relation.delete()
