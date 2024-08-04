@@ -2,7 +2,11 @@ from django.shortcuts import render
 from django.views import View
 from post.models import Post
 from .forms import PostSearchForm
+
+
 # Create your views here.
+
+
 class HomeView(View):
     form_class = PostSearchForm
     def get(self, request):
