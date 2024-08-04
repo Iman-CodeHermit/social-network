@@ -10,6 +10,7 @@ from .models import OtpCode, User
 from post.models import Post
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
+from relation.models import Relation
 
 
 # Create your views here.

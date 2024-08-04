@@ -8,15 +8,15 @@
     <a href="{% url 'accounts:edit_user' %}" class="btn btn-info">Edit Profile</a>
 {%endif%}
 
-<br/>
+
 
 {% if request.user.id != user.id and not is_following %}
-    <a class="btn btn-primary" href="{% url 'relation:user_follow' user.id %}">Follow</a>
+    <a class="btn btn-primary" href="{% url 'relation:user_follow' user.id %}">Follow</a><br/>
 {% elif request.user.id != user.id and is_following %}
-    <a class="btn btn-primary" href="{% url 'relation:user_unfollow' user.id %}">Unfollow</a>
+    <a class="btn btn-primary" href="{% url 'relation:user_unfollow' user.id %}">Unfollow</a><br/>
 {% endif %}
 
-<br/>
+<br/> 
 
 <div class="card">
     <h4>{{ user.bio }}</h4>

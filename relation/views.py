@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from accounts.models import User
 from django.views import View
+from .models import Relation
+from django.contrib import messages
 
 # Create your views here.
 
