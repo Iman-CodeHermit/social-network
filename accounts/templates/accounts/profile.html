@@ -11,9 +11,9 @@
 <br/>
 
 {% if request.user.id != user.id and not is_following %}
-    <a class="btn btn-primary" href="{% url 'accounts:user_follow' user.id %}">Follow</a>
+    <a class="btn btn-primary" href="{% url 'relation:user_follow' user.id %}">Follow</a>
 {% elif request.user.id != user.id and is_following %}
-    <a class="btn btn-primary" href="{% url 'accounts:user_unfollow' user.id %}">Unfollow</a>
+    <a class="btn btn-primary" href="{% url 'relation:user_unfollow' user.id %}">Unfollow</a>
 {% endif %}
 
 <br/>

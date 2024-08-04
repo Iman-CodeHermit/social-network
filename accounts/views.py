@@ -135,7 +135,6 @@ class UserProfileView(LoginRequiredMixin, View):
         return render(request, self.template_name, {'user': user, 'posts': posts, 'is_following': is_following})
 
 
-
 class EditUserView(LoginRequiredMixin, View):
     form_class = EditUserForm
     
