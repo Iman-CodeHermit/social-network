@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'accounts.apps.AccountsConfig',
     'post.apps.PostConfig',
+    'relation.apps.RelationConfig'
 
 ]
 
