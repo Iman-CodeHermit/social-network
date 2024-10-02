@@ -33,24 +33,36 @@ class UserChangeForm(forms.ModelForm):
 
 
 class UserRegistrationForm(forms.Form):
-    phone_number = forms.CharField(required=True, max_length= 11, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    phone_number = forms.CharField(required=True, max_length=11, widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}))
     username = forms.CharField(max_length=50, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}),label='Confirm Password')
+
     def clean_email(self):
         email = self.cleaned_data['email']
         user = User.objects.filter(email=email).exists()
         if user:
             raise ValidationError('this email already exists.')
+
+        if 'root' or 'admin' in email:
+            raise ValidationError('this email cannot contain "root" "admin"')
         return email
 
     def clean_phone(self):
         phone_number = self.cleaned_data['phone_number']
-        user = User.objects.filter(phone_number = phone_number).exists()
+        user = User.objects.filter(phone_number=phone_number).exists()
         if user:
             raise ValidationError('this phone number already exists.')
         return phone_number
+
+    def clean(self):
+        cd = super().clean()
+        p1 = cd.get('password')
+        p2 = cd.get('confirm_password')
+
+        if p1 and p2 and p1 != p2:
+            raise ValidationError('password must match')
 
 
 class VerifyCodeForm(forms.Form):

@@ -68,13 +68,14 @@ class UserRegisterVerifyView(View):
         if form.is_valid():
             cd = form.cleaned_data
             if cd['code'] == code_instance.code:
-                User.objects.create_user(
-                    user_session['phone_number'],
-                    user_session['email'],
-                    user_session['username'],
-                    user_session['password'],
+                user = User.objects.create_user(
+                    phone_number=user_session['phone_number'],
+                    email=user_session['email'],
+                    username=user_session['username'],
+                    password=user_session['password'],
                 )
                 code_instance.delete()
+                login(request, user)
                 messages.success(request, 'You Registered', 'success')
                 return redirect('home:home')
             else:
