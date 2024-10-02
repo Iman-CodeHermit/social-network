@@ -172,4 +172,7 @@ class UserPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
 
 
 class DeleteUserView(LoginRequiredMixin, View):
-    pass
+    def get(self, request):
+        user = request.user
+        user.delete()
+        return redirect('home:home')

@@ -41,12 +41,13 @@ class UserRegistrationForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data['email']
+
+        if 'root' in email or 'admin' in email:
+            raise ValidationError('this email cannot contain "root" "admin"')
+
         user = User.objects.filter(email=email).exists()
         if user:
             raise ValidationError('this email already exists.')
-
-        if 'root' or 'admin' in email:
-            raise ValidationError('this email cannot contain "root" "admin"')
         return email
 
     def clean_phone(self):
