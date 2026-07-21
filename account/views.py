@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
-from .models import Relation
+from .models import Relation, Profile
 
 
 class UserRegisterView(View):
@@ -73,16 +73,21 @@ class UserLogoutView(LoginRequiredMixin, View):
 
 
 class UserProfileView(LoginRequiredMixin, View):
+
     def get(self, request, user_id):
+        #age = Profile.objects.get(user=request.user).age
+        #bio = Profile.objects.get(user=request.user).bio
+        user_profile = request.user.profile
         is_following = False
         user = get_object_or_404(User, pk=user_id)
         posts = user.posts.all()
         relation = Relation.objects.filter(from_user=request.user, to_user=user)
         if relation.exists():
             is_following = True
-        return render(request, 'account/profile.html', {'user': user, 'posts': posts, 'is_following': is_following})
+        return render(request, 'account/profile.html', {'user': user, 'posts': posts,
+                                                        'is_following': is_following, 'profile':user_profile})
 
-
+#'age':age, 'bio': bio
 class UserPasswordResetView(auth_views.PasswordResetView):
     template_name = 'account/password_reset_form.html'
     success_url = reverse_lazy('account:password_reset_done')
@@ -146,14 +151,25 @@ class EditUserView(LoginRequiredMixin, View):
     form_class = EditUserForm
 
     def get(self, request):
-        form = self.form_class(instance=request.user.profile, initial={'email': request.user.email})
+        # اگر پروفایل وجود نداشت، یکی بساز
+        if not hasattr(request.user, 'profile'):
+            Profile.objects.create(user=request.user)
+
+        form = self.form_class(
+            instance=request.user.profile,
+            initial={'email': request.user.email}
+        )
         return render(request, 'account/edit_profile.html', {'form': form})
 
     def post(self, request):
+        if not hasattr(request.user, 'profile'):
+            Profile.objects.create(user=request.user)
+
         form = self.form_class(request.POST, instance=request.user.profile)
         if form.is_valid():
             form.save()
-            request.user.email = form.cleaned_data['email']
+            request.user.email = form.cleaned_data.get('email')
             request.user.save()
             messages.success(request, 'profile edited successfully', 'success')
+
         return redirect('account:user_profile', request.user.id)

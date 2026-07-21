@@ -3,8 +3,18 @@
 {% block content %}
     <h2 class="text-center">{{ user.username }}</h2>
 
+    <div class="text-center mb-4">
+        {% if profile.bio %}
+            <p><strong>Bio:</strong> {{ profile.bio }}</p>
+        {% endif %}
+
+        {% if profile.age and profile.age > 0 %}
+            <p><strong>Age:</strong> {{ profile.age }}</p>
+        {% endif %}
+    </div>
+
     {% if request.user.id == user.id %}
-        <a href="{% url 'home:post_create' %}" class="btn btn-primary">Create</a>
+        <a href="{% url 'home:post_create' %}" class="btn btn-primary">Create Post</a>
         <a href="{% url 'account:edit_user' %}" class="btn btn-info">Edit Profile</a>
     {% endif %}
 
@@ -14,9 +24,16 @@
         <a class="btn btn-primary" href="{% url 'account:user_unfollow' user.id %}">Unfollow</a>
     {% endif %}
 
+    <hr>
+
+    <h4>Posts ({{ posts.count }})</h4>
     <div class="card">
         {% for post in posts %}
-            <a href="{{ post.get_absolute_url }}" class="card-body">{{ post.body|truncatewords:8 }}</a>
+            <div class="card-body">
+                <a href="{{ post.get_absolute_url }}">{{ post.body|truncatewords:15 }}</a>
+            </div>
+        {% empty %}
+            <p class="text-center">No posts yet.</p>
         {% endfor %}
     </div>
 {% endblock %}
